@@ -5,13 +5,18 @@ $rut = $_GET['rut'];
 //Todos los proyectos de la persona
 $consultaProyect = "SELECT
 proyecto.*, 
-descripcionproyecto.*
+descripcionproyecto.*, 
+estado.estado
 FROM
 proyecto
 INNER JOIN
 descripcionproyecto
 ON 
     proyecto.id_proyecto = descripcionproyecto.id_proyecto
+INNER JOIN
+estado
+ON 
+    proyecto.estado = estado.id_estado
 WHERE
 proyecto.rut = $rut";
 
@@ -105,15 +110,16 @@ $SQLconsultaProyect = $conn->query($consultaProyect);
 
 while ($rowProy1 = $SQLconsultaProyect->fetch_array()){
     echo "<tr>";
-    echo "<td>".$rowProy1['2']."</td>";
+    echo "<td>".$rowProy1['5']." - ".$rowProy1['2']."</td>";
     echo "<td>".$rowProy1['7']."</td>";
     echo "<td>".$rowProy1['9']."</td>";
-    echo "<td>".$rowProy1['4']."</td>";
+    echo "<td>".$rowProy1['4']." - ".$rowProy1['10']."</td>";
     echo "<td>";
         while ($rowProy = $SQLbotones->fetch_array()){
                 if(($rowProy1['0'] == $rowProy['0']) && ($rowProy1['9'] == $rowProy['maxim'])){?>
-                    <a href="#" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#editaProyModal"><i class="far fa-edit"></i></a>
+                    <a href="#edit<?= $rowProy1['5'];?>" class="btn btn-sm btn-success" data-bs-toggle="modal"><i class="far fa-edit"></i></a>
                     <a href="#" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></a>
+                    <?php include ("editProyModal.php");?>
                 <?php }
         }
     mysqli_data_seek($SQLbotones,0);
@@ -139,19 +145,9 @@ while ($rowProy1 = $SQLconsultaProyect->fetch_array()){
 
 
 <?php include 'newProyModal.php';?>
-<?php include 'editProyModal.php';?>
-
-<script>
-let editaModal = document.getElementById('editaProyModal')
-
-editaModal.addEventListener('shown.bs.modal',event => {
-    let button = event.relatedTarget
-    let id = button.getAttribute('data-bs-id')
-    let inputId = 1//editaModal.querySelector('.modal-body #id')
 
 
-})
-</script>
+
     <script src="../assets/js/bootstrap.bundle.min.js" ></script>
 </body>
 </html>
