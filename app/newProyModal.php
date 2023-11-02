@@ -18,8 +18,8 @@
             <label for="descripcion" class="form-label">Descripcion: </label>
             <textarea type="text" name="descripcion" id="descripcion" class="form-control" rows="3" required></textarea>
           </div>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="submit" class="btn btn-primary">Grabar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fa-regular fa-circle-xmark"></i> Cerrar</button>
+          <button type="submit" class="btn btn-primary"><i class="fa-regular fa-floppy-disk"></i> Grabar</button>
 
 
         </form>
