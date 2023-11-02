@@ -2,6 +2,13 @@
 require 'config/database.php';
 $rut = $_GET['rut'];
 
+if (isset($_GET['save']) == 1){
+$save = "- SIN CAMBIO";
+}
+else{
+$save = "";
+}
+
 //Todos los proyectos de la persona
 $consultaProyect = "SELECT
 proyecto.*, 
@@ -84,7 +91,7 @@ $res=mysqli_fetch_assoc($SQLconsultaProyectNum);
 <body>
     <div class="container py-3">
 
-    <h2>TABLAS</h2>
+    <h2>TABLAS <?php echo $save ?></h2>
     <p><?php echo "Bienvenido ".$Datos['4']." ".$Datos['3']." ".$Datos['1']." ".$Datos['2']." ud tiene ".$res['total']." proyectos"; ?></p>
 
 
@@ -110,10 +117,10 @@ $SQLconsultaProyect = $conn->query($consultaProyect);
 
 while ($rowProy1 = $SQLconsultaProyect->fetch_array()){
     echo "<tr>";
-    echo "<td>".$rowProy1['5']." - ".$rowProy1['2']."</td>";
-    echo "<td>".$rowProy1['7']."</td>";
-    echo "<td>".$rowProy1['9']."</td>";
-    echo "<td>".$rowProy1['4']." - ".$rowProy1['10']."</td>";
+    echo "<td>".$rowProy1['5']." - ".$rowProy1['2']."</td>";//id - nombre
+    echo "<td>".$rowProy1['7']."</td>";//desc
+    echo "<td>".$rowProy1['9']."</td>";//version
+    echo "<td>".$rowProy1['4']." - ".$rowProy1['10']."</td>";//estado n est val
     echo "<td>";
         while ($rowProy = $SQLbotones->fetch_array()){
                 if(($rowProy1['0'] == $rowProy['0']) && ($rowProy1['9'] == $rowProy['maxim'])){?>
@@ -121,6 +128,8 @@ while ($rowProy1 = $SQLconsultaProyect->fetch_array()){
                     <a href="#" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></a>
                     <?php include ("editProyModal.php");?>
                 <?php }
+
+
         }
     mysqli_data_seek($SQLbotones,0);
     echo "</td>";
