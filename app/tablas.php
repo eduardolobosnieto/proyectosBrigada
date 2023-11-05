@@ -87,6 +87,7 @@ $res=mysqli_fetch_assoc($SQLconsultaProyectNum);
     <title>Proyectos Brigada</title>
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
     <link href="../assets/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="container py-3">
@@ -117,24 +118,31 @@ $SQLconsultaProyect = $conn->query($consultaProyect);
 
 while ($rowProy1 = $SQLconsultaProyect->fetch_array()){
     echo "<tr>";
-    echo "<td>".$rowProy1['5']." - ".$rowProy1['2']."</td>";//id - nombre
+    echo "<td>".$rowProy1['0']." - ".$rowProy1['5']." - ".$rowProy1['2']."</td>";//idProy idDescProy - nombre
     echo "<td>".$rowProy1['7']."</td>";//desc
     echo "<td>".$rowProy1['9']."</td>";//version
     echo "<td>".$rowProy1['4']." - ".$rowProy1['10']."</td>";//estado n est val
     echo "<td>";
+    if($rowProy1['4'] != 1){
         while ($rowProy = $SQLbotones->fetch_array()){
                 if(($rowProy1['0'] == $rowProy['0']) && ($rowProy1['9'] == $rowProy['maxim'])){?>
                     <a href="#edit<?= $rowProy1['5'];?>" class="btn btn-sm btn-success" data-bs-toggle="modal"><i class="far fa-edit"></i></a>
-                    <a href="#" class="btn btn-sm btn-danger"><i class="far fa-trash-alt"></i></a>
+                    <button class="btn btn-sm btn-danger" onclick="elimProySwAl(<?php echo $rowProy1['0'];?>,<?php echo $rut;?>)"><i class="far fa-trash-alt"></i></button>
                     <?php include ("editProyModal.php");?>
                 <?php }
-
-
         }
     mysqli_data_seek($SQLbotones,0);
     echo "</td>";
     echo "<tr>";
+    }
+    else{
+        echo "</td>";
+        echo "<tr>";
+    }
 }
+
+
+
 
 ?>
 
@@ -157,6 +165,47 @@ while ($rowProy1 = $SQLconsultaProyect->fetch_array()){
 
 
 
+
     <script src="../assets/js/bootstrap.bundle.min.js" ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <script>
+
+    function elimProySwAl(codigo,rut){
+    Swal.fire({
+  title: 'Esta seguro?',
+  text: "¡No podrás revertir esto!",
+  icon: 'warning',
+  showCancelButton: true,
+  confirmButtonColor: '#3085d6',
+  cancelButtonColor: '#d33',
+  confirmButtonText: '¡Sí, bórralo!'
+}).then((result) => {
+  if (result.isConfirmed) {
+    mandar_php(codigo,rut)
+  }
+})
+
+}
+
+function mandar_php(codigo,rut){
+    parametros = {id: codigo};
+    $.ajax({
+        data: parametros,
+        url: 'elimProyModal.php',
+        type: 'POST',
+        beforeSend: function(){},
+        success:function(){
+            Swal.fire(
+      'Deleted!',
+      'Your file has been deleted.',
+      'success'
+    ).then((result)=>{
+                window.location.href ='tablas.php?rut='+rut
+            });
+        },
+    });
+}
+    </script>
 </body>
 </html>
